@@ -1,6 +1,16 @@
 from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
 from tkinter import *
+import pyttsx3 as pp
+
+enigne = pp.init()
+voices = enigne.getProperty('voices')
+print(voices)
+
+enigne.setProperty('voice', voices[1].id)
+def speak( word ):
+    enigne.say(word)
+    enigne.runAndWait()
 
 bot =ChatBot("My Bot")
 
@@ -58,7 +68,9 @@ def ask_from_bot():
     ans = bot.get_response(que)
     msgs.insert(END, " You : " +que)
     msgs.insert(END, " Bot : " + str(ans))
+    speak(ans)
     textF.delete(0, END)
+    msgs.yview(END)
 
 
 # creating a frame inside main
@@ -66,7 +78,7 @@ frame = Frame(main)
 
 # creating scrollBrollbar inside frame
 scrollB = Scrollbar(frame)
-msgs = Listbox(frame, width = 80, height = 21)
+msgs = Listbox(frame, width = 80, height = 21, yscrollcommand=scrollB.set)
 
 scrollB.pack(side=RIGHT, fill=Y)
 msgs.pack(side = LEFT, fill = BOTH, pady = 5)
@@ -79,6 +91,15 @@ textF.pack(fill=X, padx=10, pady=10)
 # creating button
 btn = Button(main,text="SEND",font=("verdana",10), command=ask_from_bot)
 btn.pack(pady=3)
+
+
+# creating enter function :
+def enter_function(event):
+    btn.invoke()
+
+# binding window with enter key
+main.bind('<Return>', enter_function)
+
 main.mainloop()
 
 
